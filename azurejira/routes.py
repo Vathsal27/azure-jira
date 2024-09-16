@@ -16,6 +16,13 @@ def log_event():
 
     return jsonify({"message": "Event logged successfully"})
 
+@app.route('/')
+def index():
+    return {
+        "status":200,
+        "message":"APIs working properly"
+    }
+
 # @app.route('/create_jira_tickets', methods=['POST'])
 # def create_jira_tickets():
 #     event_data = request.json
