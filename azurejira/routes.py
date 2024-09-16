@@ -3,6 +3,14 @@ from flask import request, jsonify
 import logging
 from .utils import download_excel_file, display_excel_file, create_jira_ticket
 
+logging.basicConfig(
+    level=logging.INFO,  # Adjust the logging level as needed (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format='%(asctime)s %(levelname)s %(message)s',
+    handlers=[
+        logging.StreamHandler()  # Output logs to the console   
+    ]
+)
+
 @app.route('/log_event', methods=['POST'])
 def log_event():
     event_data = request.json
