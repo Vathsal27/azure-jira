@@ -11,7 +11,7 @@ def subscribe_to_folder():
     }
     data = {
         "changeType": "created",
-        "notificationUrl": "https://yourapp.com/log_event",  # Replace with your actual URL
+        "notificationUrl": "https://azure-jira-1.onrender.com/log_event",  # Replace with your actual URL
         "resource": f"/me/drive/root:/{os.getenv('FILE_NAME')}:/children",
         "expirationDateTime": datetime.datetime.utcnow() + datetime.timedelta(days=2*365)
         # "expirationDateTime": "2024-12-31T11:00:00.000Z"
