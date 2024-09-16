@@ -34,13 +34,10 @@ logging.basicConfig(
 @app.route('/log_event', methods=['POST'])
 def log_event():
     try:
-        # Extract event data from the request
         event_data = request.json
         logging.info(f"Received event: {event_data}")
 
-        # Check for file upload event
         if event_data['resource'] == f"/me/drive/root:/{os.getenv('FILE_NAME')}":
-            # Process the event (e.g., log the file upload details)
             file_info = requests.get(
                 f"https://graph.microsoft.com/v1.0/me/drive/root:/{os.getenv('FILE_NAME')}",
                 headers={'Authorization': f'Bearer {get_access_token()}'}
