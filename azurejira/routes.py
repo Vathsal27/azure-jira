@@ -31,7 +31,7 @@ logging.basicConfig(
 #     return jsonify({"message": "Event logged successfully"})
 
 
-@app.route('/api/log_event', methods=['POST'])
+@app.route('/log_event', methods=['POST'])
 def log_event():
     try:
         event_data = request.json
@@ -56,7 +56,7 @@ def index():
         "message":"APIs working properly"
     }
 
-@app.route('/api/verify')
+@app.route('/verify')
 def verify_webhook():
     # Microsoft Graph will send a GET request to verify your endpoint
     challenge = request.args.get('validationToken')
