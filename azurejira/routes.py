@@ -31,7 +31,7 @@ logging.basicConfig(
 #     return jsonify({"message": "Event logged successfully"})
 
 
-@app.route('/log_event', methods=['POST'])
+@app.route('/api/log_event', methods=['POST'])
 def log_event():
     try:
         event_data = request.json
@@ -55,6 +55,13 @@ def index():
         "status":200,
         "message":"APIs working properly"
     }
+
+@app.route('/api/verify')
+def verify_webhook():
+    # Microsoft Graph will send a GET request to verify your endpoint
+    challenge = request.args.get('validationToken')
+    logging.info(f"Validation Token received: {challenge}")
+    return challenge, 200
 
 # @app.route('/create_jira_tickets', methods=['POST'])
 # def create_jira_tickets():
