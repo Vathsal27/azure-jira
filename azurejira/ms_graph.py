@@ -2,6 +2,9 @@ import requests
 from .ms_auth import get_access_token
 import os
 import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def subscribe_to_folder():
     url = "https://graph.microsoft.com/v1.0/subscriptions"
