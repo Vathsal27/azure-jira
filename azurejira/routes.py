@@ -1,52 +1,35 @@
 from azurejira import app
 from flask import request, jsonify
 import logging
-from logging.handlers import RotatingFileHandler
-from .utils import get_access_token
-import sys
-from .config import *
+from .utils import download_excel_file, display_excel_file, create_jira_ticket
 
-# Your secret client state from the subscription
-CLIENT_STATE = 'secretClientValue'
+@app.route('/log_event', methods=['POST'])
+def log_event():
+    event_data = request.json
+    file_name = event_data['resourceData']['name']
+    event_time = event_data['subscriptionExpirationDateTime']
+    uploader = event_data.get('uploader', 'Unknown')
 
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.INFO)  # Set the log level to INFO or as needed
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-app.logger.addHandler(handler)
+    logging.info(f"File uploaded: {file_name}")
+    logging.info(f"Event time: {event_time}")
+    logging.info(f"Uploader: {uploader}")
 
-# Ensure that Flask's default logging configuration does not override
-app.logger.setLevel(logging.INFO)
+    return jsonify({"message": "Event logged successfully"})
 
-@app.route('/microsoft365-webhook', methods=['POST'])
-def microsoft365_webhook():
-    # Log the incoming request
-    app.logger.info("Webhook triggered with data: %s", request.json)
+# @app.route('/create_jira_tickets', methods=['POST'])
+# def create_jira_tickets():
+#     event_data = request.json
+#     file_id = event_data['resourceData']['id']  # Get the file ID from the event
+#     file_name = event_data['resourceData']['name']
 
-    data = request.json
+#     if not file_name.endswith('.xlsx'):
+#         logging.warning(f"Uploaded file is not an Excel file: {file_name}")
+#         return jsonify({"message": "File is not an Excel file"}), 400
 
-    # Microsoft validation check
-    if 'validationToken' in data:
-        app.logger.info("Validation token received")
-        return data['validationToken'], 200
+#     # Download the file from Microsoft 365
+#     download_excel_file(file_id)
 
-    # Verify the subscription clientState
-    if data['value'][0]['clientState'] != CLIENT_STATE:
-        app.logger.warning("Client state mismatch")
-        return "Client state mismatch", 400
+#     # Extract data and create Jira tickets
+#     display_excel_file(file_name)
 
-    try:
-        access_token = get_access_token(CLIENT_ID, CLIENT_SECRET, TENANT_ID)
-    except Exception as e:
-        return app.logger.warning(f"Failed to get access token: {e}")
-
-    # Handle the file change notifications
-    for notification in data['value']:
-        resource = notification['resource']
-        event_type = notification['changeType']
-        app.logger.info(f"File change detected: {resource} with event type: {event_type}")
-        
-        # Add your custom logic here (e.g., process file upload)
-
-    app.logger.info("Webhook processed successfully")
-    return jsonify({"status": "success"}), 200
+#     return jsonify({"message": "File processed successfully"}), 200
